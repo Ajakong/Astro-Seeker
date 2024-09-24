@@ -92,7 +92,6 @@ GameManager::GameManager() :
 	blurRT(MakeScreen(640, 480, true)),
 	shrinkRT(MakeScreen(320, 240, true)),
 	depthRT(MakeScreen(640, 480)),
-	/*skyDomeH(MV1LoadModel("Model/Skydome/universe_skydome.mv1")),*/
 	m_isClearFlag(false),
 	itemNum(0),
 	m_isBossWatch(false)
@@ -139,17 +138,9 @@ GameManager::~GameManager()
 
 void GameManager::Init()
 {
-	/*MATERIALPARAM Material;
-	Material.Diffuse = GetColorF(1.0f, 1.0f, 1.0f, 1.0f);
-	Material.Ambient = GetColorF(0.0f, 0.0f, 0.0f, 0.5f);
-	Material.Specular = GetColorF(0.5f, 0.5f, 0.5f, 0.5f);
-	Material.Emissive = GetColorF(0.0f, 0.0f, 0.0f, 0.0f);
-	Material.Power = 20.0f;
-	SetMaterialParam(Material);
-	SetLightAmbColor(GetColorF(0.5f, 0.5f, 0.5f, 1.0f));*/
 	SetGlobalAmbientLight(GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
 	
-	player->SetMatrix();
+	player->SetMatrix();//モデルに行列を反映
 
 	// メッシュの数を取ってくる
 	auto meshNum = MV1GetMeshNum(modelH);
@@ -188,32 +179,32 @@ void GameManager::Init()
 	DxLib::SetCreateGraphChannelBitDepth(32);
 	DxLib::SetCreateDrawValidGraphChannelNum(1);
 
-	MyEngine::Physics::GetInstance().Entry(player);
-	MyEngine::Physics::GetInstance().Entry(bossPlanet);
+	MyEngine::Physics::GetInstance().Entry(player);//物理演算クラスに登録
+	MyEngine::Physics::GetInstance().Entry(bossPlanet);//物理演算クラスに登録
 	for (auto& item : planet)
 	{
 		item->Init();
-		MyEngine::Physics::GetInstance().Entry(item);
+		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 	}
 	for (auto& item : clearObject)
 	{
 		item->Init();
-		MyEngine::Physics::GetInstance().Entry(item);
+		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 	}
 	for (auto& item : poworStone)
 	{
 		item->Init();
-		MyEngine::Physics::GetInstance().Entry(item);
+		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 	}
 	for (auto& item : takobo)
 	{
-		MyEngine::Physics::GetInstance().Entry(item);
+		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 		item->SetTarget(player);
 	}
 	
 	for (auto& item : gorori)
 	{
-		MyEngine::Physics::GetInstance().Entry(item);
+		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 		item->SetTarget(player);
 	}
 }
@@ -232,7 +223,7 @@ void GameManager::IntroUpdate()
 {
 	ui->FadeUpdate();
 
-	MyEngine::Physics::GetInstance().Update();
+	MyEngine::Physics::GetInstance().Update();//当たり判定を更新
 	Vec3 planetToPlayer = player->GetPos() - player->GetNowPlanetPos();
 	Vec3 sideVec = GetCameraRightVector();
 	Vec3 front = Cross(planetToPlayer, sideVec).GetNormalized() * -1;
@@ -241,17 +232,19 @@ void GameManager::IntroUpdate()
 	player->SetUpVec(planetToPlayer);
 
 	//本当はカメラとプレイヤーの角度が90度以内になったときプレイヤーの頭上を見たりできるようにしたい。
-	//camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * 100 - Vec3(GetCameraFrontVector())* 300));
+	//今回はプレイヤーの相対位置からカメラ位置を指定
 	camera->SetUpVec(player->GetNormVec());
 	camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * kCameraDistanceUp - front * (kCameraDistanceFront + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
 
-	camera->Update(player->GetPos());
+	camera->Update(player->GetPos());//カメラ視点の更新
 
 	// カリング方向の反転
 	for (int i = 0; i < MV1GetMeshNum(modelH); ++i)
 	{
 		MV1SetMeshBackCulling(modelH, i, DX_CULLING_RIGHT);
 	}
+	//今回はシェーダーも使用しない
+
 
 	// カリング方向を元に戻す
 	for (int i = 0; i < MV1GetMeshNum(modelH); ++i)
@@ -320,33 +313,36 @@ void GameManager::GamePlayingUpdate()
 
 	 /*camera->SetUpVec(planet->GetNormVec(player->GetPos()));
 	 camera->Update(player->GetPos());*/
-	bossPlanet->Update();
-	for(auto& item : planet)item->Update();
+
+
+	bossPlanet->Update();//ボスステージの更新
+	for(auto& item : planet)item->Update();//ステージの更新
 	
 	for (auto& item : poworStone)
 	{
-		item->Update();
+		item->Update();//物体Xの更新
 	}
 	for (auto& item : clearObject)
 	{
-		item->Update();
+		item->Update();//グランド物体Xの更新(呼ばれるのはボスを倒した後)
 	}
 	player->Update();
 
 	for (auto& item : takobo)
 	{
-		item->Update();
+		item->Update();//遠距離攻撃する敵の更新
 	}
 	for (auto& item : killerTheSeeker)
 	{
-		item->Update();
+		item->Update();//ボスの更新
 	}
-	for (auto& item : gorori)item->Update();
+	for (auto& item : gorori)item->Update();//惑星を走り回る敵の更新
 
-	userData->dissolveY = player->GetRegenerationRange();
+	userData->dissolveY = player->GetRegenerationRange();//シェーダー用プロパティ
 
-	MyEngine::Physics::GetInstance().Update();
-	for (auto& item : warpGate)item->SetEffectPos();
+	MyEngine::Physics::GetInstance().Update();//当たり判定の更新
+
+	for (auto& item : warpGate)item->SetEffectPos();//エフェクトの更新
 	if (player->GetBoostFlag())
 	{
 		camera->m_cameraUpdate = &Camera::NeutralUpdate;
