@@ -76,6 +76,15 @@
     <Filter Include="ソース ファイル\Planet\h\System\h">
       <UniqueIdentifier>{cc414c8b-cbf1-4cc6-8d20-8301a5a5b137}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Manager">
+      <UniqueIdentifier>{d88c5895-c66e-4bf3-910a-b0c51fb03ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Manager\cpp">
+      <UniqueIdentifier>{68c4ebd7-ebb9-45e8-a290-18c0059e35f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Manager\h">
+      <UniqueIdentifier>{6d5e2457-95ff-444a-a07e-bfecfd0a01ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -204,16 +213,7 @@
     <ClCompile Include="BoxPlanet.cpp">
       <Filter>ソース ファイル\Planet\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Ui.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="FontManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MyLib\Physics\ColliderBox.cpp">
@@ -237,14 +237,23 @@
     <ClCompile Include="PauseScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EffectManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>ソース ファイル\Manager\cpp</Filter>
     </ClCompile>
     <ClCompile Include="ScreenManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>ソース ファイル\Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphManager.cpp">
+      <Filter>ソース ファイル\Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectManager.cpp">
+      <Filter>ソース ファイル\Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="FontManager.cpp">
+      <Filter>ソース ファイル\Manager\cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,9 +267,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GameOverScene.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Pad.h">
@@ -377,16 +383,7 @@
     <ClInclude Include="BoxPlanet.h">
       <Filter>ソース ファイル\Planet\h</Filter>
     </ClInclude>
-    <ClInclude Include="SoundManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Ui.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FontManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MyLib\Physics\ColliderBox.h">
@@ -410,14 +407,26 @@
     <ClInclude Include="PauseScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EffectManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="SoundManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
     </ClInclude>
     <ClInclude Include="ScreenManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="FontManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectManager.h">
+      <Filter>ソース ファイル\Manager\h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

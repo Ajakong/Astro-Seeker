@@ -59,17 +59,17 @@ public:
 		if (norm <= 0.0) return ans;
 
 		norm = 1.0 / sqrt(norm);
-		Axis.x *= norm;
-		Axis.y *= norm;
-		Axis.z *= norm;
+		Axis.x *=static_cast<float> (norm);
+		Axis.y *= static_cast<float> (norm);
+		Axis.z *= static_cast<float> (norm);
 
 		ccc = cos(0.5 * radian);
 		sss = sin(0.5 * radian);
 
-		ans.Qu.w = ccc;
-		ans.Qu.x = sss * Axis.x;
-		ans.Qu.y = sss * Axis.y;
-		ans.Qu.z = sss * Axis.z;
+		ans.Qu.w =static_cast<float>(ccc);
+		ans.Qu.x = static_cast<float>(sss) * Axis.x;
+		ans.Qu.y = static_cast<float>(sss) * Axis.y;
+		ans.Qu.z = static_cast<float>(sss) * Axis.z;
 
 		return ans;
 	}

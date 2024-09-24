@@ -129,6 +129,8 @@ void KillerTheSeeker::Draw()
 		if (m_sphere.size() == 0)return;
 		sphere->Draw();
 	}
+
+	//DrawBox(200, 700, 500 + m_Hp*3, 750, 0x00ff00, true);
 }
 
 void KillerTheSeeker::OnCollideEnter(std::shared_ptr<Collidable> colider)
@@ -144,7 +146,7 @@ void KillerTheSeeker::OnCollideEnter(std::shared_ptr<Collidable> colider)
 		{
 			PlaySoundMem(m_counterHitSEHandle, DX_PLAYTYPE_BACK);
 			attack->DeleteFlag();
-			m_Hp -= 60;
+			m_Hp -= 30;
 
 		}
 		m_isHitFrame = true;
@@ -219,14 +221,17 @@ void KillerTheSeeker::AttackSphereUpdate()
 {
 	m_rigid->SetVelocity(VGet(0, 0, 0));
 
-	m_sphereNum++;
+	for (int i = 0; i < GetRand(5)+1; i++)
+	{
+		m_sphereNum++;
 
-	m_createFrameCount = 0;
-	Set3DPositionSoundMem(m_rigid->GetPos().VGet(), m_shotSEHandle);
-	PlaySoundMem(m_shotSEHandle, DX_PLAYTYPE_BACK);
-	m_sphere.push_back(std::make_shared<Killer>(Priority::Low, ObjectTag::EnemyAttack, shared_from_this(), m_target, GetMyPos(), m_attackDir, 1, 0xff0000));
-	MyEngine::Physics::GetInstance().Entry(m_sphere.back());
+		m_createFrameCount = 0;
+		Set3DPositionSoundMem(m_rigid->GetPos().VGet(), m_shotSEHandle);
+		PlaySoundMem(m_shotSEHandle, DX_PLAYTYPE_BACK);
+		m_sphere.push_back(std::make_shared<Killer>(Priority::Low, ObjectTag::EnemyAttack, shared_from_this(), m_target, GetMyPos()+m_upVec*i*2, m_attackDir, 1, 0xff0000));
+		MyEngine::Physics::GetInstance().Entry(m_sphere.back());
 
+	}	
 	m_enemyUpdate = &KillerTheSeeker::IdleUpdate;
 }
 

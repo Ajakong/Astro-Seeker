@@ -77,6 +77,7 @@ namespace
 	constexpr float kCameraDistanceAddFrontInJump = 300.f;
 	constexpr float kCameraDistanceUp = 500.f;
 
+
 	const char* kMiniMapScreenName = "MiniMap";
 }
 
@@ -119,7 +120,7 @@ GameManager::GameManager() :
 	m_skyDomeH = ModelManager::GetInstance().GetModelData("Skybox.mv1");
 	fontHandle = FontManager::GetInstance().GetFontData("disital.TTF", "Pocket Calculator", 60, 7, DX_FONTTYPE_NORMAL);
 
-	MV1SetScale(m_skyDomeH, VGet(1.5f, 1.5f, 1.5f));
+	MV1SetScale(m_skyDomeH, VGet(1.3f, 1.3f, 1.3f));
 
 	m_managerUpdate = &GameManager::IntroUpdate;
 	m_managerDraw = &GameManager::IntroDraw;
@@ -198,8 +199,8 @@ void GameManager::Init()
 	}
 	for (auto& item : takobo)
 	{
-		MyEngine::Physics::GetInstance().Entry(item);//•¨—‰‰ZƒNƒ‰ƒX‚É“o˜^
 		item->SetTarget(player);
+		MyEngine::Physics::GetInstance().Entry(item);//•¨—‰‰ZƒNƒ‰ƒX‚É“o˜^
 	}
 
 	for (auto& item : gorori)

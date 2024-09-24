@@ -74,7 +74,6 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_drawFunc = &TitleScene::NormalDraw;
 
 	SetCameraPositionAndTargetAndUpVec(Vec3(0, 0, -500).VGet(), Vec3(0, 0, 0).VGet(), GetCameraUpVector());
-	//‰œs0.1`1000‚Ü‚Å‚ðƒJƒƒ‰‚Ì•`‰æ”ÍˆÍ‚Æ‚·‚é
 	SetCameraNearFar(100, 6000);
 	SetLightDirection(GetCameraFrontVector());
 }
@@ -100,7 +99,6 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
-
 	(this->*m_drawFunc)();
 }
 
@@ -145,13 +143,11 @@ void TitleScene::NormalUpdate()
 
 void TitleScene::FadeOutUpdate()
 {
-
 	m_fps = GetFPS();
 	m_frame++;
 	if (m_frame >= 120) {
 		m_isGamePlaying = true;
 	}
-	
 }
 
 void TitleScene::ChangeScene(std::shared_ptr<Scene> next)
