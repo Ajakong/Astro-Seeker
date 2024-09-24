@@ -99,16 +99,16 @@ GameManager::GameManager() :
 	ui = std::make_shared<Ui>();
 	player = std::make_shared<Player>(modelH);
 	camera = std::make_shared<Camera>();
-	planet.push_back(std::make_shared<SpherePlanet>(Vec3(0, -500, 0), 0xaadd33,3,ModelManager::GetInstance().GetModelData("Sphere/planet_moon.mv1")));
-	planet.push_back(std::make_shared<SpherePlanet>(Vec3(6000, 0, 2000),0x4444ff,3,ModelManager::GetInstance().GetModelData("Sphere/planet_ice.mv1")));
-	planet.push_back(std::make_shared<SpherePlanet>(Vec3(-3000, 1000, -3000), 0xff4400,1.f, ModelManager::GetInstance().GetModelData("Sphere/planet_red.mv1")));
+	planet.push_back(std::make_shared<SpherePlanet>(Vec3(0, -500, 0), 0xaadd33, 3, ModelManager::GetInstance().GetModelData("Sphere/planet_moon.mv1")));
+	planet.push_back(std::make_shared<SpherePlanet>(Vec3(6000, 0, 2000), 0x4444ff, 3, ModelManager::GetInstance().GetModelData("Sphere/planet_ice.mv1")));
+	planet.push_back(std::make_shared<SpherePlanet>(Vec3(-3000, 1000, -3000), 0xff4400, 1.f, ModelManager::GetInstance().GetModelData("Sphere/planet_red.mv1")));
 	bossPlanet = std::make_shared<BossPlanet>(Vec3(0, -6000, 0), 0x0000ff);
 	takobo = { std::make_shared<Takobo>(Vec3(1000,0,500)),std::make_shared<Takobo>(Vec3(-300,0,500)),std::make_shared<Takobo>(Vec3(0,900,500)) };
 	gorori = { std::make_shared<Gorori>(Vec3(7000,500,2300)),std::make_shared<Gorori>(Vec3(6500,500,1700)),std::make_shared<Gorori>(Vec3(5500,0,2000)) };
-	poworStone.push_back(std::make_shared<Item>(Vec3(0, -800, 0),true));
+	poworStone.push_back(std::make_shared<Item>(Vec3(0, -800, 0), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(-300, 0, 0), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(300, 0, 0), true));
-	poworStone.push_back(std::make_shared<Item>(Vec3(-200, -800, 0),true));
+	poworStone.push_back(std::make_shared<Item>(Vec3(-200, -800, 0), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(0, 0, 500), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(0, 0, -500), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(6000, 600, 2000), true));
@@ -117,14 +117,14 @@ GameManager::GameManager() :
 	poworStone.push_back(std::make_shared<Item>(Vec3(6000, -500, 2000), true));
 	poworStone.push_back(std::make_shared<Item>(Vec3(-3300, 1000, -3300), true));
 	m_skyDomeH = ModelManager::GetInstance().GetModelData("Skybox.mv1");
-	fontHandle = FontManager::GetInstance().GetFontData("disital.TTF", "Pocket Calculator",60,7,DX_FONTTYPE_NORMAL);
+	fontHandle = FontManager::GetInstance().GetFontData("disital.TTF", "Pocket Calculator", 60, 7, DX_FONTTYPE_NORMAL);
 
-	MV1SetScale(m_skyDomeH, VGet(1, 1, 1));
+	MV1SetScale(m_skyDomeH, VGet(1.5f, 1.5f, 1.5f));
 
 	m_managerUpdate = &GameManager::IntroUpdate;
 	m_managerDraw = &GameManager::IntroDraw;
 
-	m_miniMapScreenHandle = ScreenManager::GetInstance().GetScreenData(kMiniMapScreenName,Game::kScreenWidth,Game::kScreenHeight);
+	m_miniMapScreenHandle = ScreenManager::GetInstance().GetScreenData(kMiniMapScreenName, Game::kScreenWidth, Game::kScreenHeight);
 }
 
 GameManager::~GameManager()
@@ -139,7 +139,7 @@ GameManager::~GameManager()
 void GameManager::Init()
 {
 	SetGlobalAmbientLight(GetColorF(0.0f, 0.0f, 1.0f, 1.0f));
-	
+
 	player->SetMatrix();//モデルに行列を反映
 
 	// メッシュの数を取ってくる
@@ -201,7 +201,7 @@ void GameManager::Init()
 		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 		item->SetTarget(player);
 	}
-	
+
 	for (auto& item : gorori)
 	{
 		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
@@ -251,7 +251,7 @@ void GameManager::IntroUpdate()
 	{
 		MV1SetMeshBackCulling(modelH, i, DX_CULLING_LEFT);
 	}
-	
+
 	if (ui->GetFadeCount() > 100)
 	{
 		m_cameraUpVec = GetCameraUpVector();
@@ -263,11 +263,11 @@ void GameManager::IntroUpdate()
 
 void GameManager::IntroDraw()
 {
-	MV1SetPosition(m_skyDomeH, VGet(0,0,0));
-	
+	MV1SetPosition(m_skyDomeH, VGet(0, 0, 0));
+
 	MV1DrawModel(m_skyDomeH);
 	bossPlanet->Draw();
-	for(auto& item :planet)item->Draw();
+	for (auto& item : planet)item->Draw();
 	player->Draw();
 	for (auto& item : warpGate)
 	{
@@ -316,8 +316,8 @@ void GameManager::GamePlayingUpdate()
 
 
 	bossPlanet->Update();//ボスステージの更新
-	for(auto& item : planet)item->Update();//ステージの更新
-	
+	for (auto& item : planet)item->Update();//ステージの更新
+
 	for (auto& item : poworStone)
 	{
 		item->Update();//物体Xの更新
@@ -349,10 +349,10 @@ void GameManager::GamePlayingUpdate()
 	}
 	for (int i = 0; i < takobo.size(); i++)
 	{
-		takobo[i]->DeleteManage();
+		takobo[i]->DeleteManage();//削除管理
 		if (takobo[i]->WatchHp() < 0)
 		{
-			MyEngine::Physics::GetInstance().Exit(takobo[i]);
+			MyEngine::Physics::GetInstance().Exit(takobo[i]);//物理演算クラスから登録解除
 
 			takobo.erase(takobo.begin() + i);//さっきの例をそのまま使うと(1,2,5,3,4)でitには5まで入ってるので取り除きたい3,4はitからend()までで指定できる
 			i--;
@@ -360,33 +360,31 @@ void GameManager::GamePlayingUpdate()
 	}
 	for (auto& item : warpGate)
 	{
-		
-		item->Update();
-		
+		item->Update();//加速装置の更新
 	}
 
 	for (int i = 0; i < killerTheSeeker.size(); i++)
 	{
-		killerTheSeeker[i]->DeleteManage();
+		killerTheSeeker[i]->DeleteManage();//削除管理
 		if (killerTheSeeker[i]->WatchHp() < 300)
 		{
-			bossPlanet->SetColor(0x000000);
-			bossPlanet->SetGravityPower(20.f);
-			
+			bossPlanet->SetColor(0xff44ff);//ボスステージの色変更
+			bossPlanet->SetGravityPower(20.f);//重力変更
+
 		}
 		if (killerTheSeeker[i]->WatchHp() < 100)
 		{
-			bossPlanet->SetColor(0xffaa00);
-			bossPlanet->SetGravityPower(1.f);
+			bossPlanet->SetColor(0xffaa00);//色変更
+			bossPlanet->SetGravityPower(1.f);//重力変更
 		}
 		if (killerTheSeeker[i]->WatchHp() < 0)
 		{
-			clearObject.push_back(std::make_shared<ClearObject>(killerTheSeeker[i]->GetRigidbody()->GetPos()));
+			clearObject.push_back(std::make_shared<ClearObject>(killerTheSeeker[i]->GetRigidbody()->GetPos()));//クリアオブジェクトの生成
 			clearObject.back()->Init();
-			MyEngine::Physics::GetInstance().Entry(clearObject.back());
-			
-			camera->WatchThis(clearObject.back()->GetRigidbody()->GetPos(),Vec3(clearObject.back()->GetRigidbody()->GetPos()+ (bossPlanet->GetNormVec(clearObject.back()->GetRigidbody()->GetPos())*300)), bossPlanet->GetNormVec(clearObject.back()->GetRigidbody()->GetPos()));
-			MyEngine::Physics::GetInstance().Exit(killerTheSeeker[i]);
+			MyEngine::Physics::GetInstance().Entry(clearObject.back());//物理演算クラスに登録
+
+			camera->WatchThis(clearObject.back()->GetRigidbody()->GetPos(), Vec3(clearObject.back()->GetRigidbody()->GetPos() + (bossPlanet->GetNormVec(clearObject.back()->GetRigidbody()->GetPos()) * 300)), bossPlanet->GetNormVec(clearObject.back()->GetRigidbody()->GetPos()));//カメラの視点管理
+			MyEngine::Physics::GetInstance().Exit(killerTheSeeker[i]);//登録解除
 
 			killerTheSeeker.erase(killerTheSeeker.begin() + i);//さっきの例をそのまま使うと(1,2,5,3,4)でitには5まで入ってるので取り除きたい3,4はitからend()までで指定できる
 			i--;
@@ -395,9 +393,9 @@ void GameManager::GamePlayingUpdate()
 
 	for (int i = 0; i < gorori.size(); i++)
 	{
-		if (gorori[i]->WatchHp() < 0)
+		if (gorori[i]->WatchHp() < 0)//死んでいるか
 		{
-			MyEngine::Physics::GetInstance().Exit(gorori[i]);
+			MyEngine::Physics::GetInstance().Exit(gorori[i]);//登録解除
 
 			gorori.erase(gorori.begin() + i);//さっきの例をそのまま使うと(1,2,5,3,4)でitには5まで入ってるので取り除きたい3,4はitからend()までで指定できる
 			i--;
@@ -407,43 +405,45 @@ void GameManager::GamePlayingUpdate()
 	{
 		if (poworStone[i]->GetDeleteFlag())
 		{
-			MyEngine::Physics::GetInstance().Exit(poworStone[i]);
+			MyEngine::Physics::GetInstance().Exit(poworStone[i]);//登録解除
 
 			poworStone.erase(poworStone.begin() + i);//さっきの例をそのまま使うと(1,2,5,3,4)でitには5まで入ってるので取り除きたい3,4はitからend()までで指定できる
 			i--;
 		}
 	}
-	
+
 	Vec3 planetToPlayer = player->GetPos() - player->GetNowPlanetPos();
 	Vec3 sideVec = GetCameraRightVector();
-	Vec3 front = Cross(planetToPlayer, sideVec).GetNormalized() * -1;
+	Vec3 front = Cross(planetToPlayer, sideVec).GetNormalized() * -1;//-1をかけて逆ベクトルにしている
+
+	//相対的な軸ベクトルの設定
 	player->SetSideVec(sideVec);
 	player->SetFrontVec(front);
 	player->SetUpVec(planetToPlayer);
-	/*Vec3 playerToCamera = camera->GetPos() -player->GetPos();
-	float a = acos(Dot(planetToPlayer.GetNormalized(), playerToCamera.GetNormalized())) * 180 / DX_PI_F;
-
-	if ( a> 68)*/
 
 	camera->SetBoost(player->GetBoostFlag());
 	//本当はカメラとプレイヤーの角度が90度以内になったときプレイヤーの頭上を見たりできるようにしたい。
-	//camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * 100 - Vec3(GetCameraFrontVector())* 300));
 	camera->SetUpVec(player->GetNormVec());
-	
-	camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * kCameraDistanceUp - front * (kCameraDistanceFront + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
-	
-	camera->Update(player->GetPos());
-	//camera->SetCameraPos(player->GetPos());
 
-	player->SetMatrix();
-	for (auto& item : takobo)item->SetMatrix();
+	if (player->GetBoostFlag())
+	{
+		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * (kCameraDistanceUp - 400) - front * ((kCameraDistanceFront - 700) + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
+	}
+	else
+	{
+		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * kCameraDistanceUp - front * (kCameraDistanceFront + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
+
+	}
+
+	camera->Update(player->GetPos());
+
+	player->SetMatrix();//行列を反映
+	for (auto& item : takobo)item->SetMatrix();//行列を反映
 	// カリング方向の反転
 	for (int i = 0; i < MV1GetMeshNum(modelH); ++i)
 	{
 		MV1SetMeshBackCulling(modelH, i, DX_CULLING_RIGHT);
 	}
-	/*SetUseVertexShader(outlineVsH);
-	SetUsePixelShader(outlinePsH);*/
 	// カリング方向を元に戻す
 	for (int i = 0; i < MV1GetMeshNum(modelH); ++i)
 	{
@@ -454,16 +454,11 @@ void GameManager::GamePlayingUpdate()
 	{
 		m_isGameOverFlag = true;
 	}
-	/*if (planet->GetClearFlag())
-	{
-		m_isClearFlag = true;
-		MyEngine::Physics::GetInstance().Clear();
-	}*/
 	if (player->IsClear())
 	{
 		m_isClearFlag = true;
 	}
-	if (poworStone.size() <= 5&& warpGate.size() == 0)
+	if (poworStone.size() <= 5 && warpGate.size() == 0)
 	{
 		warpGate.push_back(std::make_shared<WarpGate>(Vec3(800, 0, 300), m_warpEffectHandle));
 		warpGate.back()->SetWarpPos(Vec3(6000, 0, 2000));
@@ -477,40 +472,22 @@ void GameManager::GamePlayingUpdate()
 		warpGate.back()->SetWarpPos(Vec3(-3000, 1000, -3000));
 		MyEngine::Physics::GetInstance().Entry(warpGate.back());
 		camera->WatchThis(warpGate.back()->GetRigidbody()->GetPos(), Vec3(4000, 700, 1000), planet[0]->GetNormVec(warpGate.back()->GetRigidbody()->GetPos()));
-
-		/*Vec3 zero = Vec3(0, 0, 0);
-		Vec3 offSetVec =Vec3(0,650,0);
-		Quaternion myQ;
-		m_angle += 0.05f;
-
-		Vec3 front = (Vec3(5500, 500, 1700) - Vec3(-3000, 1000, -3000)).GetNormalized();
-		for (int i = 0; i < 16; i++)
-		{
-			myQ.SetQuaternion(offSetVec);
-			myQ.SetMove(DX_PI_F * 1 / 8 * i + m_angle, front);
-			Vec3 offSet = myQ.Move(offSetVec, zero);
-			takobo.push_back(std::make_shared<Takobo>(Vec3(-3000, 1000, -3000) + offSet));
-
-			MyEngine::Physics::GetInstance().Entry(takobo.back());
-			takobo.back()->SetTarget(player);
-
-		}*/
 	}
-	if (poworStone.size() == 0&&warpGate.size()==2)
+	if (poworStone.size() == 0 && warpGate.size() == 2)
 	{
 		warpGate.push_back(std::make_shared<WarpGate>(Vec3(-2500, 500, -2800), m_warpEffectHandle));
 		warpGate.back()->SetWarpPos(Vec3(0, -6000, 0));
 		MyEngine::Physics::GetInstance().Entry(warpGate.back());
 		camera->WatchThis(warpGate.back()->GetRigidbody()->GetPos(), Vec3(-2000, 0, -2000), planet[0]->GetNormVec(warpGate.back()->GetRigidbody()->GetPos()));
-		killerTheSeeker.push_back(std::make_shared<KillerTheSeeker>(Vec3(0, -7000, 0)));
+		killerTheSeeker.push_back(std::make_shared<KillerTheSeeker>(Vec3(0, -7000, 0)));//ボス出現
 		for (auto& item : killerTheSeeker)
 		{
-			item->Init();
-			MyEngine::Physics::GetInstance().Entry(item);
-			item->SetTarget(player);
+			item->Init();//初期化処理
+			MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
+			item->SetTarget(player);//ターゲットを指定
 		}
 	}
-	if (player->GetNowPlanetPos() == Vec3(0, -6000, 0)&& !m_isBossWatch)
+	if (player->GetNowPlanetPos() == Vec3(0, -6000, 0) && !m_isBossWatch)
 	{
 		m_isBossWatch = true;
 		camera->WatchThis(killerTheSeeker.back()->GetMyPos(), killerTheSeeker.back()->GetMyPos() + Vec3(0, 0, -1200), bossPlanet->GetNormVec(killerTheSeeker.back()->GetMyPos()));
@@ -526,17 +503,17 @@ void GameManager::GamePlayingUpdate()
 void GameManager::GamePlayingDraw()
 {
 	DxLib::SetDrawScreen(m_miniMapScreenHandle);//カメラのnear,farが勝手に変わってる・・・？
-	
+
 	SetCameraNearFar(1.f, 100000);
-	
+
 	ClearDrawScreen();
-	
+
 	SetCameraPositionAndTargetAndUpVec((player->GetPos() + player->GetNormVec() * 300).VGet(), player->GetPos().VGet(), m_cameraUpVec.VGet());
 	m_cameraUpVec = GetCameraUpVector();
 
 	Vec3 pos = MV1GetPosition(m_skyDomeH);
 	DxLib::MV1DrawModel(m_skyDomeH);
-	
+
 	bossPlanet->SetIsSearch(player->IsSearch());
 	bossPlanet->Draw();
 	for (auto& item : planet)
@@ -582,8 +559,11 @@ void GameManager::GamePlayingDraw()
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 
 	camera->Update(player->GetPos());
-	
+
 	SetCameraNearFar(1.f, 100000);
+
+	DxLib::MV1DrawModel(m_skyDomeH);
+
 
 	DxLib::DrawRectRotaGraph(kUiText_SrkX, kUiText_SrkY, kUiText_SrkX, kUiText_SrkY, kUiText_Width, kUiText_Height, kUiText_Exrate, 0, textureUIHandle, true);
 
@@ -594,7 +574,7 @@ void GameManager::GamePlayingDraw()
 		item->SetIsSearch(player->IsSearch());
 		item->Draw();
 	}
-	
+
 	player->Draw();
 	for (auto& item : warpGate)
 	{
@@ -607,7 +587,7 @@ void GameManager::GamePlayingDraw()
 		DxLib::DrawBox(0, 0, 1600, 900,
 			0x444488, true);
 		DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		
+
 	}
 	for (auto& item : poworStone)
 	{
@@ -617,7 +597,7 @@ void GameManager::GamePlayingDraw()
 	{
 		item->Draw();
 	}
-	
+
 	for (auto& item : takobo)item->Draw();
 	for (auto& item : killerTheSeeker)item->Draw();
 	for (auto& item : gorori)item->Draw();
@@ -625,7 +605,7 @@ void GameManager::GamePlayingDraw()
 	camera->DebagDraw();
 	Effekseer_Sync3DSetting();
 	DrawEffekseer3D();
-	
+
 	DxLib::SetRenderTargetToShader(1, -1);		// RTの解除
 	DxLib::SetRenderTargetToShader(2, -1);		// RTの解除
 
@@ -636,7 +616,7 @@ void GameManager::GamePlayingDraw()
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_MULA, alpha);
 	DxLib::DrawBox(0, 0, Game::kScreenWidth, Game::kScreenHeight, 0xff4444, true);
 	DxLib::SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	
-	DxLib::DrawExtendGraph(600, 0,1000,250, m_miniMapScreenHandle, false);
-	DxLib::DrawBox(600, 0, 1000,250,0x00dddd,false);
+
+	DxLib::DrawExtendGraph(600, 0, 1000, 250, m_miniMapScreenHandle, false);
+	DxLib::DrawBox(600, 0, 1000, 250, 0x00dddd, false);
 }

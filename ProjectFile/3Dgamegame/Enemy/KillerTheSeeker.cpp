@@ -49,7 +49,7 @@ namespace
 }
 
 
-KillerTheSeeker::KillerTheSeeker(Vec3 pos):Enemy(-1, Priority::Static, ObjectTag::KillerTheSeeker),
+KillerTheSeeker::KillerTheSeeker(Vec3 pos) :Enemy(-1, Priority::Static, ObjectTag::KillerTheSeeker),
 m_Hp(kHp),
 m_attackCoolDownCount(0),
 m_centerToEnemyAngle(0),
@@ -58,7 +58,7 @@ m_isSecondFase(false),
 m_isHitFrame(0),
 m_hitFrame(0)
 {
-	m_counterHitSEHandle= SoundManager::GetInstance().GetSoundData(kCounterHitSEhandlePath);
+	m_counterHitSEHandle = SoundManager::GetInstance().GetSoundData(kCounterHitSEhandlePath);
 	SetCreate3DSoundFlag(true);
 	m_shotSEHandle = SoundManager::GetInstance().GetSoundData(kShotSEhandlePath);
 	SetCreate3DSoundFlag(false);
@@ -110,20 +110,20 @@ void KillerTheSeeker::DeleteManage()
 	auto result = remove_if(m_sphere.begin(), m_sphere.end(), [this](const auto& sphere)
 		{
 			bool isOut = sphere->IsDelete() == true;
-			if (isOut == true)
-			{
-				m_sphereNum--;
-				MyEngine::Physics::GetInstance().Exit(sphere);
-			}
-			return isOut;
+	if (isOut == true)
+	{
+		m_sphereNum--;
+		MyEngine::Physics::GetInstance().Exit(sphere);
+	}
+	return isOut;
 		});
 	m_sphere.erase(result, m_sphere.end());
 }
 
 void KillerTheSeeker::Draw()
 {
-	DrawSphere3D(m_rigid->GetPos().VGet(), m_radius, 10,m_color, m_color, true);
-	
+	DrawSphere3D(m_rigid->GetPos().VGet(), m_radius, 10, m_color, m_color, true);
+
 	for (auto& sphere : m_sphere)
 	{
 		if (m_sphere.size() == 0)return;
@@ -142,10 +142,10 @@ void KillerTheSeeker::OnCollideEnter(std::shared_ptr<Collidable> colider)
 		auto attack = dynamic_pointer_cast<EnemySphere>(colider);
 		if (attack->GetCounterFlag())
 		{
-			PlaySoundMem(m_counterHitSEHandle,DX_PLAYTYPE_BACK);
+			PlaySoundMem(m_counterHitSEHandle, DX_PLAYTYPE_BACK);
 			attack->DeleteFlag();
 			m_Hp -= 60;
-			
+
 		}
 		m_isHitFrame = true;
 	}
@@ -161,7 +161,7 @@ void KillerTheSeeker::OnCollideEnter(std::shared_ptr<Collidable> colider)
 		item->radius = 80;
 		m_Hp = 80;
 	}
-	
+
 }
 
 Vec3 KillerTheSeeker::GetMyPos()
@@ -178,7 +178,7 @@ void KillerTheSeeker::IdleUpdate()
 {
 	m_color = 0x444444;
 	m_velocity = m_attackDir.GetNormalized();
-	
+
 	m_attackCoolDownCount++;
 
 	if (m_attackCoolDownCount > kAttackCoolDownTime)
@@ -186,10 +186,10 @@ void KillerTheSeeker::IdleUpdate()
 		int attackState = GetRand(2);
 		Vec3 norm = (m_rigid->GetPos() - m_nowPlanetPos).GetNormalized();
 		Vec3 toTarget = ToVec(m_rigid->GetPos(), m_target->GetRigidbody()->GetPos());
-		
+
 		if (m_Hp < 300 && m_Hp >= 100)
 		{
-			m_color=0xff0000;
+			m_color = 0xff0000;
 			m_attackCoolDownCount = 0;
 			m_attackDir = GetAttackDir();//オブジェクトに向かうベクトルを正規化したもの
 			m_enemyUpdate = &KillerTheSeeker::AttackSphereUpdate;
@@ -206,7 +206,7 @@ void KillerTheSeeker::IdleUpdate()
 				m_enemyUpdate = &KillerTheSeeker::AttackSphereUpdate;
 				break;
 			}
-			
+
 			default:
 				m_attackCoolDownCount = 250;
 				break;
@@ -224,7 +224,7 @@ void KillerTheSeeker::AttackSphereUpdate()
 	m_createFrameCount = 0;
 	Set3DPositionSoundMem(m_rigid->GetPos().VGet(), m_shotSEHandle);
 	PlaySoundMem(m_shotSEHandle, DX_PLAYTYPE_BACK);
-	m_sphere.push_back(std::make_shared<Killer>(Priority::Low, ObjectTag::EnemyAttack, shared_from_this(),m_target, GetMyPos(), m_attackDir, 1, 0xff0000));
+	m_sphere.push_back(std::make_shared<Killer>(Priority::Low, ObjectTag::EnemyAttack, shared_from_this(), m_target, GetMyPos(), m_attackDir, 1, 0xff0000));
 	MyEngine::Physics::GetInstance().Entry(m_sphere.back());
 
 	m_enemyUpdate = &KillerTheSeeker::IdleUpdate;
@@ -232,16 +232,13 @@ void KillerTheSeeker::AttackSphereUpdate()
 
 void KillerTheSeeker::AttackRollingUpdate()
 {
-	m_rigid->SetVelocity(m_velocity * 10);
+	m_rigid->SetVelocity(m_velocity * 20);
 	m_attackCount++;
 	if (m_attackCount > 500)
 	{
 		m_velocity = m_attackDir.GetNormalized();
 		m_attackCount = 0;
-		m_color = 0x444444;
-		m_enemyUpdate = &KillerTheSeeker::IdleUpdate;
 	}
-	
 }
 
 Vec3 KillerTheSeeker::GetAttackDir() const
