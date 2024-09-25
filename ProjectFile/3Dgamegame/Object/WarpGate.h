@@ -20,5 +20,9 @@ private:
 	int m_emitterHandle;
 	int m_effectPlayHandle;
 	Vec3 m_nowPlanetPos;
+	int m_gaussScreenHandle;
+	int m_colorScreenHandle;
+	int m_highBrightScreenHandle;
+	int m_screenHandle;
 };
 

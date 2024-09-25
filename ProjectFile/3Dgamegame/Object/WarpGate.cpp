@@ -4,6 +4,14 @@
 #include<EffekseerForDXLib.h>
 #include"../SoundManager.h"
 #include"../EffectManager.h"
+#include"../ScreenManager.h"
+
+namespace
+{
+	const char* kGaussScreenName = "Gauss";
+	const char* kColorScreenName = "Color";
+	const char* kBrightScreenName = "HighBright";
+}
 
 Effekseer::Matrix43 GetEffMatrix(DxLib::MATRIX mat)
 {
@@ -33,7 +41,8 @@ m_emitterHandle(EffectManager::GetInstance().GetEffectData(effectname))
 	m_rigid->SetPos(pos);
 
 	m_effectPlayHandle=PlayEffekseer3DEffect(m_emitterHandle);
-	
+	m_gaussScreenHandle = ScreenManager::GetInstance().GetScreenData(kGaussScreenName, 1600, 900);
+	m_colorScreenHandle = ScreenManager::GetInstance().GetScreenData(kColorScreenName, 1600, 900);
 }
 
 WarpGate::~WarpGate()
@@ -68,7 +77,25 @@ void WarpGate::SetEffectPos()
 
 void WarpGate::Draw()
 {
-	DrawLine3D(m_rigid->GetPos().VGet(), ((m_warpPos-m_rigid->GetPos()).GetNormalized()*300+m_rigid->GetPos()).VGet(), 0xaaaaff);
+	//m_screenHandle=GetDrawScreen();
+	//SetDrawScreen(m_colorScreenHandle);
+	//ClearDrawScreen();
+	//DrawLine3D(m_rigid->GetPos().VGet(), ((m_warpPos - m_rigid->GetPos()).GetNormalized() * 300 + m_rigid->GetPos()).VGet(), 0xaaaaff);
+
+	//GraphFilterBlt(m_colorScreenHandle, m_gaussScreenHandle, DX_GRAPH_FILTER_GAUSS, 16,900);
+	//
+	//SetDrawScreen(m_screenHandle);
+
+	//// 描画ブレンドモードを加算にする
+	//SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+
+	//
+	//DrawExtendGraph(0, 0, 1600, 900, m_gaussScreenHandle,true);
+	//DrawExtendGraph(0, 0, 1600, 900, m_gaussScreenHandle, true);
+
+	//// 描画ブレンドモードをブレンド無しに戻す
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
 	DrawSphere3D(m_rigid->GetPos().VGet(), 60, 7, 0xff00ff, 0xff00ff, false);
 	DrawCube3D(Vec3(m_rigid->GetPos() + Vec3(60, 60, 60)).VGet(), Vec3(m_rigid->GetPos() + Vec3(-60, -60, -60)).VGet(), 0xffff00, 0xffff00, false);
 }

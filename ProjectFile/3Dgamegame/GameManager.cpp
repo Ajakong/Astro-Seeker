@@ -208,6 +208,12 @@ void GameManager::Init()
 		MyEngine::Physics::GetInstance().Entry(item);//物理演算クラスに登録
 		item->SetTarget(player);
 	}
+
+
+	warpGate.push_back(std::make_shared<WarpGate>(Vec3(800, 0, 300), m_warpEffectHandle));
+	warpGate.back()->SetWarpPos(Vec3(6000, 0, 2000));
+	MyEngine::Physics::GetInstance().Entry(warpGate.back());
+
 }
 
 void GameManager::Update()
@@ -290,6 +296,32 @@ void GameManager::IntroDraw()
 
 void GameManager::GamePlayingUpdate()
 {
+
+	camera->Update(player->GetPos());
+	Vec3 planetToPlayer = player->GetPos() - player->GetNowPlanetPos();
+	Vec3 sideVec = GetCameraRightVector();
+	Vec3 front = Cross(planetToPlayer, sideVec).GetNormalized() * -1;//-1をかけて逆ベクトルにしている
+
+	//相対的な軸ベクトルの設定
+	player->SetSideVec(sideVec);
+	player->SetFrontVec(front);
+	player->SetUpVec(planetToPlayer);
+
+	camera->SetBoost(player->GetBoostFlag());
+	//本当はカメラとプレイヤーの角度が90度以内になったときプレイヤーの頭上を見たりできるようにしたい。
+	camera->SetUpVec(player->GetNormVec());
+
+	if (player->GetBoostFlag())
+	{
+		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * (kCameraDistanceUp - 400) - front * ((kCameraDistanceFront - 700) + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
+	}
+	else
+	{
+		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * kCameraDistanceUp - front * (kCameraDistanceFront + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
+
+	}
+
+
 	//// 使用するシェーダをセットしておく
 	//SetUseVertexShader(vsH);
 	//SetUsePixelShader(psH);
@@ -413,31 +445,7 @@ void GameManager::GamePlayingUpdate()
 		}
 	}
 
-	Vec3 planetToPlayer = player->GetPos() - player->GetNowPlanetPos();
-	Vec3 sideVec = GetCameraRightVector();
-	Vec3 front = Cross(planetToPlayer, sideVec).GetNormalized() * -1;//-1をかけて逆ベクトルにしている
-
-	//相対的な軸ベクトルの設定
-	player->SetSideVec(sideVec);
-	player->SetFrontVec(front);
-	player->SetUpVec(planetToPlayer);
-
-	camera->SetBoost(player->GetBoostFlag());
-	//本当はカメラとプレイヤーの角度が90度以内になったときプレイヤーの頭上を見たりできるようにしたい。
-	camera->SetUpVec(player->GetNormVec());
-
-	if (player->GetBoostFlag())
-	{
-		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * (kCameraDistanceUp - 400) - front * ((kCameraDistanceFront - 700) + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
-	}
-	else
-	{
-		camera->SetCameraPoint(player->GetPos() + (Vec3(GetCameraUpVector()).GetNormalized() * kCameraDistanceUp - front * (kCameraDistanceFront + kCameraDistanceAddFrontInJump * player->GetJumpFlag())));
-
-	}
-
-	camera->Update(player->GetPos());
-
+	
 	player->SetMatrix();//行列を反映
 	for (auto& item : takobo)item->SetMatrix();//行列を反映
 	// カリング方向の反転
@@ -503,9 +511,7 @@ void GameManager::GamePlayingUpdate()
 
 void GameManager::GamePlayingDraw()
 {
-	DxLib::SetDrawScreen(m_miniMapScreenHandle);//カメラのnear,farが勝手に変わってる・・・？
-
-	SetCameraNearFar(1.f, 100000);
+	DxLib::SetDrawScreen(m_miniMapScreenHandle);
 
 	ClearDrawScreen();
 
@@ -560,8 +566,6 @@ void GameManager::GamePlayingDraw()
 	DxLib::SetDrawScreen(DX_SCREEN_BACK);
 
 	camera->Update(player->GetPos());
-
-	SetCameraNearFar(1.f, 100000);
 
 	DxLib::MV1DrawModel(m_skyDomeH);
 
