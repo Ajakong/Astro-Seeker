@@ -210,10 +210,6 @@ void GameManager::Init()
 	}
 
 
-	warpGate.push_back(std::make_shared<WarpGate>(Vec3(800, 0, 300), m_warpEffectHandle));
-	warpGate.back()->SetWarpPos(Vec3(6000, 0, 2000));
-	MyEngine::Physics::GetInstance().Entry(warpGate.back());
-
 }
 
 void GameManager::Update()

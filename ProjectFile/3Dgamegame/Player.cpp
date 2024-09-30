@@ -205,8 +205,16 @@ void Player::SetMatrix()
 	//mat = MMult(mat, MGetRotZ(0/*atan2(Vec3::Up().y, m_rigid->GetPos().x)*/));
 	Vec3 axis = Cross(Vec3::Up(), m_upVec);
 
-	mat=MMult(mat, MGetRotVec2(Vec3::Up().VGet(), m_upVec.VGet()));
+	if (acos(Dot(Vec3::Up(), m_upVec)) < DX_PI_F / 2)
+	{
+		mat = MMult(mat, MGetRotVec2(Vec3::Up().VGet(), m_upVec.VGet()));
+	}
+	else
+	{
+		mat = MMult(mat, MGetRotVec2(Vec3::Up().VGet(), Vec3(m_upVec*-1).VGet()));
+	}
 
+	
 	/*mat =;*/
 
 	//mat = MMult(mat, MGetRotVec2(Vec3::Front().VGet(), (m_moveDir).VGet()));
